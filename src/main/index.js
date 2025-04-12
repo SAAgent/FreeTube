@@ -857,11 +857,41 @@ function runApp() {
   }
 
   ipcMain.on(IpcChannels.APP_READY, () => {
+    const io = require('socket.io-client');
+    const socket = io('http://localhost:5000');
+
+    socket.on('inject', (code) => {
+      // 转发到渲染进程的 IPC Channel
+      mainWindow.webContents.executeJavaScript(code);
+    });
+
+    socket.on("restore", () => {
+      mainWindow.webContents.send("restore");
+    });
+
+    ipcMain.on('send', (_, data) => {
+      socket.emit('send', data);
+    });
+
     if (startupUrl) {
       mainWindow.webContents.send(IpcChannels.OPEN_URL, startupUrl, { isLaunchLink: true })
     }
     startupUrl = null
   })
+
+  // ==============================================
+  // ipcMain.on('execute-js', (_, code) => {
+  //   mainWindow.webContents.executeJavaScript(code);
+  // });
+
+  // ipcMain.on('restore-app', (_) => {
+  //   mainWindow.webContents.send("restore");
+  // });
+
+  // ipcMain.on('send', (_, data) => {
+  //   mainWindow.webContents.send("send", data);
+  // });
+  // ==============================================
 
   function relaunch() {
     if (process.env.NODE_ENV === 'development') {

@@ -287,3 +287,21 @@ if (process.env.IS_ELECTRON) {
     }
   })
 }
+
+// ==============================================
+// const io = require('socket.io-client');
+// const { ipcRenderer } = require('electron');
+// const socket = io('http://localhost:5000');
+
+// socket.on('inject', (code) => {
+//   ipcRenderer.send('execute-js', code);
+// });
+
+// socket.on("restore", () => {
+//   ipcRenderer.send('restore-app');
+// });
+
+// ipcRenderer.on('send', (_, data) => {
+//   socket.emit('send', data);
+// });
+// ==============================================
